@@ -1,5 +1,7 @@
 {
-  "itemGroup.ftsfz": "Example Mod Tab",
-  "block.ftsfz.example_block": "Example Block",
-  "item.ftsfz.example_item": "Example Item"
+  "key.follow_the_stars_from_zero.open_menu": "Abrir menú",
+  "key.categories.follow_the_stars_from_zero": "Follow The Stars From Zero",
+  "screen.follow_the_stars_from_zero.player_menu": "Menú del jugador",
+  "tab.ftsfz.stats": "Estadísticas",
+  "tab.ftsfz.skills": "Habilidades"
 }
