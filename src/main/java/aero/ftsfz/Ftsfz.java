@@ -1,10 +1,14 @@
 package aero.ftsfz;
 
+import aero.ftsfz.block.FireflyAltarBlock;
+import aero.ftsfz.entity.FireflyEntity;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -12,6 +16,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.api.distmarker.Dist;
@@ -45,6 +50,18 @@ public class Ftsfz {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "ftsfz" namespace
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    // Create a Deferred Register to hold EntityTypes which will all be registered under the "ftsfz" namespace
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
+
+    // Half-height block that puts the player on top and summons fireflies around it
+    public static final DeferredBlock<FireflyAltarBlock> FIREFLY_ALTAR = BLOCKS.registerBlock("firefly_altar", FireflyAltarBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(1.5f).sound(SoundType.AMETHYST).lightLevel(state -> 7));
+    public static final DeferredItem<BlockItem> FIREFLY_ALTAR_ITEM = ITEMS.registerSimpleBlockItem("firefly_altar", FIREFLY_ALTAR);
+
+    // Placeholder firefly: not saved to disk, only exists while the effect lasts
+    public static final DeferredHolder<EntityType<?>, EntityType<FireflyEntity>> FIREFLY = ENTITY_TYPES.register("firefly",
+            () -> EntityType.Builder.<FireflyEntity>of(FireflyEntity::new, MobCategory.MISC)
+                    .sized(0.2f, 0.2f).noSave().clientTrackingRange(8).updateInterval(2).build("firefly"));
 
     // Creates a new Block with the id "ftsfz:example_block", combining the namespace and path
     public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock("example_block", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
@@ -57,6 +74,7 @@ public class Ftsfz {
     // Creates a creative tab with the id "ftsfz:example_tab" for the example item, that is placed after the combat tab
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.ftsfz")).withTabsBefore(CreativeModeTabs.COMBAT).icon(() -> EXAMPLE_ITEM.get().getDefaultInstance()).displayItems((parameters, output) -> {
         output.accept(EXAMPLE_ITEM.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
+        output.accept(FIREFLY_ALTAR_ITEM.get());
     }).build());
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
@@ -71,6 +89,8 @@ public class Ftsfz {
         ITEMS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
+        // Register the Deferred Register to the mod event bus so entity types get registered
+        ENTITY_TYPES.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (Ftsfz) to respond directly to events.

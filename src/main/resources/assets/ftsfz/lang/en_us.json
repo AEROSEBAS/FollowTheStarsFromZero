@@ -3,5 +3,7 @@
   "key.categories.follow_the_stars_from_zero": "Follow The Stars From Zero",
   "screen.follow_the_stars_from_zero.player_menu": "Menú del jugador",
   "tab.ftsfz.stats": "Estadísticas",
-  "tab.ftsfz.skills": "Habilidades"
+  "tab.ftsfz.skills": "Habilidades",
+  "block.ftsfz.firefly_altar": "Altar de luciérnagas",
+  "entity.ftsfz.firefly": "Luciérnaga"
 }

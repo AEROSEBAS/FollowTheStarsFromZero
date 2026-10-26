@@ -4,10 +4,12 @@ import aero.ftsfz.Ftsfz;
 import aero.ftsfz.client.screen.PlayerMenuScreen;
 import aero.ftsfz.client.ModKeyBindings;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 @EventBusSubscriber(modid = Ftsfz.MODID, value = Dist.CLIENT)
 public class ClientEvents {
@@ -21,5 +23,11 @@ public class ClientEvents {
                 mc.setScreen(new PlayerMenuScreen());
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        // La luciérnaga no tiene modelo: solo se ven sus partículas
+        event.registerEntityRenderer(Ftsfz.FIREFLY.get(), NoopRenderer::new);
     }
 }
